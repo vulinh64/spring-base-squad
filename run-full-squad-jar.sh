@@ -11,6 +11,9 @@ rm -rf spring-base spring-base-event
 git clone https://github.com/vulinh64/spring-base.git
 git clone https://github.com/vulinh64/spring-base-event.git
 
+chmod +x ./spring-base/mvnw
+chmod +x ./spring-base-event/mvnw
+
 ./spring-base/mvnw clean install -DskipTests -f ./spring-base/pom.xml
 ./spring-base-event/mvnw clean install -DskipTests -f ./spring-base-event/pom.xml
 

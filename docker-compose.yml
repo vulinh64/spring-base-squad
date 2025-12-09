@@ -78,6 +78,8 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
+    command:
+      - --lower_case_table_names=1
   rabbitmq:
     networks:
       - spring-base-network

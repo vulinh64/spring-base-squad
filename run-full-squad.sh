@@ -69,4 +69,3 @@ docker exec "$KEYCLOAK_CONTAINER" "$KCADM_PATH" set-password -r "$KEYCLOAK_REALM
 echo "Assigning client role [$ROLE_POWER_USER] to user [$POWER_USER_USERNAME] in client [$CLIENT_ID]..."
 docker exec "$KEYCLOAK_CONTAINER" "$KCADM_PATH" add-roles -r "$KEYCLOAK_REALM" --uusername "$POWER_USER_USERNAME" --cclientid "$CLIENT_ID" --rolename "$ROLE_POWER_USER"
 echo "Created user [$POWER_USER_USERNAME] with password 123456 and client role [$ROLE_POWER_USER] in client [$CLIENT_ID]"
-
