@@ -5,7 +5,7 @@ services:
     image: 'spring-base:1.0.0'
     container_name: spring-base
     build:
-      context: ./spring-base
+      context: ./build/spring-base
       dockerfile: ./Dockerfile-1
     ports:
       - "8088:8088"
@@ -29,7 +29,7 @@ services:
     image: 'spring-base-event:1.0.0'
     container_name: spring-base-event
     build:
-      context: ./spring-base-event
+      context: ./build/spring-base-event
       dockerfile: ./Dockerfile-1
     ports:
       - "9088:9088"
