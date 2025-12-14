@@ -81,6 +81,3 @@ nb-configuration.xml
 ## OS X
 ##############################
 .DS_Store
-
-spring-base/
-spring-base-event/
