@@ -20,11 +20,16 @@ rm -rf ./build/spring-base-commons/.git
 # Build the spring-base-commons artifact using Maven
 ./build/spring-base-commons/mvnw clean install -f ./build/spring-base-commons/pom.xml
 
-# Copy the built JAR file to both project build directories for Docker builds
+# Create directories
 mkdir -p ./build/spring-base/build/spring-base-commons/target
 mkdir -p ./build/spring-base-event/build/spring-base-commons/target
-cp ./build/spring-base-commons/target/spring-base-commons-1.0.0.jar ./build/spring-base/build/spring-base-commons/target/spring-base-commons-1.0.0.jar
-cp ./build/spring-base-commons/target/spring-base-commons-1.0.0.jar ./build/spring-base-event/build/spring-base-commons/target/spring-base-commons-1.0.0.jar
+
+# Set version variable for spring-base-commons
+SPRING_BASE_COMMONS_VERSION=1.0.0
+
+# Copy the built JAR file to both project build directories for Docker builds
+cp ./build/spring-base-commons/target/spring-base-commons-${SPRING_BASE_COMMONS_VERSION}.jar ./build/spring-base/build/spring-base-commons/target/spring-base-commons-${SPRING_BASE_COMMONS_VERSION}.jar
+cp ./build/spring-base-commons/target/spring-base-commons-${SPRING_BASE_COMMONS_VERSION}.jar ./build/spring-base-event/build/spring-base-commons/target/spring-base-commons-${SPRING_BASE_COMMONS_VERSION}.jar
 
 # Stop existing containers, remove old images, and start fresh containers
 docker compose down || true

@@ -1,8 +1,7 @@
-
 @echo off
 SETLOCAL EnableDelayedExpansion
 
-REM Check if Docker daemon is running
+:: Check if Docker daemon is running
 docker info >nul 2>&1
 if errorlevel 1 (
     echo Error: Docker daemon is not running.
@@ -32,10 +31,13 @@ rmdir /s /q .\build\spring-base-commons\.git
 
 call .\build\spring-base-commons\mvnw.cmd clean install -f .\build\spring-base-commons\pom.xml
 
+:: Set version variable for spring-base-commons
+SET SPRING_BASE_COMMONS_VERSION=1.0.0
+
 :: Copy the built JAR file to both project build directories for Docker builds
 
-echo f | xcopy .\build\spring-base-commons\target\spring-base-commons-1.0.0.jar .\build\spring-base\build\spring-base-commons\target\spring-base-commons-1.0.0.jar
-echo f | xcopy .\build\spring-base-commons\target\spring-base-commons-1.0.0.jar .\build\spring-base-event\build\spring-base-commons\target\spring-base-commons-1.0.0.jar
+echo f | xcopy .\build\spring-base-commons\target\spring-base-commons-!SPRING_BASE_COMMONS_VERSION!.jar .\build\spring-base\build\spring-base-commons\target\spring-base-commons-!SPRING_BASE_COMMONS_VERSION!.jar
+echo f | xcopy .\build\spring-base-commons\target\spring-base-commons-!SPRING_BASE_COMMONS_VERSION!.jar .\build\spring-base-event\build\spring-base-commons\target\spring-base-commons-!SPRING_BASE_COMMONS_VERSION!.jar
 
 :: Stop existing containers, remove old images, and start fresh containers
 
