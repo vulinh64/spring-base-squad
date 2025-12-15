@@ -12,7 +12,10 @@ rm -rf ./build/spring-base-commons
 # Clone repositories with shallow depth to save bandwidth
 git clone --depth 1 https://github.com/vulinh64/spring-base.git ./build/spring-base
 git clone --depth 1 https://github.com/vulinh64/spring-base-event.git ./build/spring-base-event
-git clone --depth 1 https://github.com/vulinh64/spring-base-commons.git ./build/spring-base-commons
+
+SPRING_BASE_COMMONS_VERSION=1.0.0
+
+git clone --depth 1 --branch "${SPRING_BASE_COMMONS_VERSION}" https://github.com/vulinh64/spring-base-commons.git ./build/spring-base-commons
 
 # Remove .git directories to clean up version control metadata
 rm -rf ./build/spring-base/.git
@@ -24,16 +27,6 @@ chmod +x ./build/spring-base-commons/mvnw
 
 ./build/spring-base-commons/mvnw clean install -f ./build/spring-base-commons/pom.xml
 
-# Create directories
-mkdir -p ./build/spring-base/build/spring-base-commons/target
-mkdir -p ./build/spring-base-event/build/spring-base-commons/target
-
-# Set version variable for spring-base-commons
-SPRING_BASE_COMMONS_VERSION=1.0.0
-
-# Copy the built JAR file to both project build directories for Docker builds
-cp ./build/spring-base-commons/target/spring-base-commons-${SPRING_BASE_COMMONS_VERSION}.jar ./build/spring-base/build/spring-base-commons/target/spring-base-commons-${SPRING_BASE_COMMONS_VERSION}.jar
-cp ./build/spring-base-commons/target/spring-base-commons-${SPRING_BASE_COMMONS_VERSION}.jar ./build/spring-base-event/build/spring-base-commons/target/spring-base-commons-${SPRING_BASE_COMMONS_VERSION}.jar
 
 # Build both Spring Boot applications using Maven on host OS (skipping tests)
 ./build/spring-base/mvnw clean install -DskipTests -f ./build/spring-base/pom.xml
