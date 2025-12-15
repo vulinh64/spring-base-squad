@@ -42,6 +42,10 @@ echo f | xcopy .\build\spring-base-commons\target\spring-base-commons-!SPRING_BA
 :: Stop existing containers, remove old images, and start fresh containers
 
 docker compose down
+
+docker compose -f .\build\spring-base\docker-compose.yml down
+docker compose -f .\build\spring-base-event\docker-compose.yml down
+
 docker rmi --force spring-base:1.0.0
 docker rmi --force spring-base-event:1.0.0
 docker compose up --detach
