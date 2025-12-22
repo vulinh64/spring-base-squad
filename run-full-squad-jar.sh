@@ -13,7 +13,7 @@ rm -rf ./build/spring-base-commons
 git clone --depth 1 https://github.com/vulinh64/spring-base.git ./build/spring-base
 git clone --depth 1 https://github.com/vulinh64/spring-base-event.git ./build/spring-base-event
 
-SPRING_BASE_COMMONS_VERSION=1.1.0
+SPRING_BASE_COMMONS_VERSION=2.2.0
 
 git clone --depth 1 --branch "${SPRING_BASE_COMMONS_VERSION}" https://github.com/vulinh64/spring-base-commons.git ./build/spring-base-commons
 

@@ -18,6 +18,6 @@ This repository is not meant to be a Java project. Rather, it contains scripts (
 
 ## Usage
 
-* For Windows, run [this script](/run-full-squad.cmd).
+* For Windows, run [this script](./run-full-squad.cmd) or [this script](./run-full-squad-jar.cmd) that use host OS to build jar files.
 
-* For Linux or MacOS, run [this script](/run-full-squad.sh).
+* For Linux or MacOS, run [this script](./run-full-squad.sh) or [this script](./run-full-squad-jar.sh) that use host OS to build jar files.
