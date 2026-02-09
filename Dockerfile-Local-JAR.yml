@@ -6,7 +6,7 @@ services:
     container_name: spring-base
     build:
       context: ./build/spring-base
-      dockerfile: ./Dockerfile-1
+      dockerfile: ./Dockerfile-Local-JAR
     ports:
       - "8088:8088"
     environment:
@@ -30,7 +30,7 @@ services:
     container_name: spring-base-event
     build:
       context: ./build/spring-base-event
-      dockerfile: ./Dockerfile-1
+      dockerfile: ./Dockerfile-Local-JAR
     ports:
       - "9088:9088"
     environment:

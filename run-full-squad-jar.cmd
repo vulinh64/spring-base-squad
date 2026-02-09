@@ -13,31 +13,65 @@ if errorlevel 1 (
 
 IF EXIST .\build\spring-base rmdir /s /q .\build\spring-base
 IF EXIST .\build\spring-base-event rmdir /s /q .\build\spring-base-event
-IF EXIST .\build\spring-base-commons rmdir /s /q .\build\spring-base-commons
 
 :: Clone repositories with shallow depth to save bandwidth
 
 git clone --depth 1 https://github.com/vulinh64/spring-base.git .\build\spring-base
 git clone --depth 1 https://github.com/vulinh64/spring-base-event.git .\build\spring-base-event
 
-SET SPRING_BASE_COMMONS_VERSION=2.4.4
+SET COMMONS_NAME=spring-base-commons
+SET COMMONS_GROUP_ID=com.vulinh
+SET COMMONS_VERSION=2.4.5
+SET GITHUB_USER=vulinh64
 
-git clone --depth 1 --branch %SPRING_BASE_COMMONS_VERSION% https://github.com/vulinh64/spring-base-commons.git .\build\spring-base-commons
+SET JAR_FILE=%COMMONS_NAME%-%COMMONS_VERSION%.jar
+SET DOWNLOAD_URL=https://github.com/%GITHUB_USER%/%COMMONS_NAME%/releases/download/%COMMONS_VERSION%/%JAR_FILE%
+
+:: Create build directory if it doesn't exist
+IF NOT EXIST .\build mkdir .\build
+
+:: Download the JAR file
+echo Downloading %JAR_FILE%...
+curl -L -o .\build\%JAR_FILE% %DOWNLOAD_URL%
+
+IF %ERRORLEVEL% NEQ 0 (
+    echo Failed to download JAR file
+    exit /b 1
+)
+
+:: Clean the target folder in local .m2 repository if it exists
+SET M2_PATH=%USERPROFILE%\.m2\repository\%COMMONS_GROUP_ID:.=\%\%COMMONS_NAME%\%COMMONS_VERSION%
+
+IF EXIST "%M2_PATH%" (
+    echo Cleaning existing Maven repository folder...
+    rmdir /s /q "%M2_PATH%"
+)
+
+:: Install the JAR to local Maven repository
+echo Installing %JAR_FILE% to local Maven repository...
+call .\mvnw.cmd install:install-file ^
+    -Dfile=.\build\%JAR_FILE% ^
+    -DgroupId=%COMMONS_GROUP_ID% ^
+    -DartifactId=%COMMONS_NAME% ^
+    -Dversion=%COMMONS_VERSION% ^
+    -Dpackaging=jar
+
+IF %ERRORLEVEL% NEQ 0 (
+    echo Failed to install JAR file
+    exit /b 1
+)
+
+echo Successfully installed %COMMONS_NAME% version %COMMONS_VERSION%
 
 :: Remove .git directories to clean up version control metadata
 
 rmdir /s /q .\build\spring-base\.git
 rmdir /s /q .\build\spring-base-event\.git
-rmdir /s /q .\build\spring-base-commons\.git
-
-:: Build the spring-base-commons artifact using Maven
-
-call .\build\spring-base-commons\mvnw.cmd clean install -f .\build\spring-base-commons\pom.xml
 
 :: Build both Spring Boot applications using Maven on host OS (skipping tests)
 
-call .\build\spring-base\mvnw.cmd clean install -DskipTests -f .\build\spring-base\pom.xml
-call .\build\spring-base-event\mvnw.cmd clean install -DskipTests -f .\build\spring-base-event\pom.xml
+call .\mvnw.cmd clean install -DskipTests -f .\build\spring-base\pom.xml
+call .\mvnw.cmd clean install -DskipTests -f .\build\spring-base-event\pom.xml
 
 :: Stop existing containers, remove old images, and start fresh containers
 
