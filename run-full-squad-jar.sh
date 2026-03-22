@@ -14,7 +14,7 @@ git clone --depth 1 https://github.com/vulinh64/spring-base-event.git ./build/sp
 
 COMMONS_NAME=spring-base-commons
 COMMONS_GROUP_ID=com.vulinh
-COMMONS_VERSION=2.4.6
+COMMONS_VERSION=2.5.0
 GITHUB_USER=vulinh64
 
 JAR_FILE="${COMMONS_NAME}-${COMMONS_VERSION}.jar"
