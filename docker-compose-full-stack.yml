@@ -7,8 +7,8 @@ services:
     build:
       context: ./build/spring-base
       dockerfile: ./Dockerfile
-    ports:
-      - "8088:8088"
+    expose:
+      - "8088"
     environment:
       - SPRING_PROFILES_ACTIVE=development
       - POSTGRESQL_HOST=postgresql
@@ -31,8 +31,8 @@ services:
     build:
       context: ./build/spring-base-event
       dockerfile: ./Dockerfile
-    ports:
-      - "9088:9088"
+    expose:
+      - "9088"
     environment:
       - SERVER_PORT=9088
       - MARIADB_HOST=mariadb
@@ -42,13 +42,32 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+  spring-base-frontend:
+    networks:
+      - spring-base-network
+    image: 'spring-base-frontend:1.0.0'
+    container_name: spring-base-frontend
+    build:
+      context: ./build/spring-base-frontend
+      dockerfile: ./Dockerfile-FE
+    expose:
+      - "80"
+  gateway:
+    networks:
+      - spring-base-network
+    image: nginx:1.29.7-alpine3.23
+    container_name: gateway
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
   postgresql:
     networks:
       - spring-base-network
     image: 'postgres:18.3-alpine3.23'
     container_name: postgresql
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=123456
@@ -66,8 +85,8 @@ services:
       - spring-base-network
     image: mariadb:12.2.2-noble
     container_name: mariadb
-    ports:
-      - "3306:3306"
+    expose:
+      - "3306"
     environment:
       - MARIADB_ROOT_PASSWORD=123456
       - MARIADB_DATABASE=myspringeventdatabase
@@ -85,9 +104,9 @@ services:
       - spring-base-network
     image: 'rabbitmq:4.2.4-alpine'
     container_name: rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
+    expose:
+      - "5672"
+      - "15672"
     environment:
       - RABBITMQ_DEFAULT_USER=rabbitmq
       - RABBITMQ_DEFAULT_PASS=123456
@@ -108,9 +127,9 @@ services:
       - KC_HEALTH_ENABLED=true
       - KC_METRICS_ENABLED=true
       - KC_HOSTNAME=keycloak
-    ports:
-      - "8080:8080"
-      - "9000:9000"
+    expose:
+      - "8080"
+      - "9000"
     healthcheck:
       test: ['CMD-SHELL', '[ -f /tmp/HealthCheck.java ] || echo "public class HealthCheck { public static void main(String[] args) throws java.lang.Throwable { java.net.URI uri = java.net.URI.create(args[0]); System.exit(java.net.HttpURLConnection.HTTP_OK == ((java.net.HttpURLConnection)uri.toURL().openConnection()).getResponseCode() ? 0 : 1); } }" > /tmp/HealthCheck.java && java /tmp/HealthCheck.java http://localhost:9000/health/live']
       interval: 10s
