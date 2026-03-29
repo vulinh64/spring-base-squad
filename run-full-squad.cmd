@@ -16,7 +16,8 @@ IF EXIST .\build\spring-base-event rmdir /s /q .\build\spring-base-event
 
 :: Clone repositories with shallow depth to save bandwidth
 
-git clone --depth 1 https://github.com/vulinh64/spring-base.git .\build\spring-base
+:: TODO: just clone from the main branch when done with the testing
+git clone --depth 1 --branch test-integrate-frontend https://github.com/vulinh64/spring-base.git .\build\spring-base
 git clone --depth 1 https://github.com/vulinh64/spring-base-event.git .\build\spring-base-event
 
 :: Remove .git directories to clean up version control metadata
