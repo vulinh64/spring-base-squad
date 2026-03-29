@@ -72,6 +72,7 @@ docker compose -f ./build/spring-base-event/docker-compose.yml down || true
 
 docker rmi --force spring-base:1.0.0 || true
 docker rmi --force spring-base-event:1.0.0 || true
+docker compose -f docker-compose-local-jar.yml build
 docker compose -f docker-compose-local-jar.yml up --detach
 
 # Initialize Keycloak data (realm, client, roles, and users)

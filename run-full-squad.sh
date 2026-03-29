@@ -24,6 +24,7 @@ docker compose -f ./build/spring-base-event/docker-compose.yml down || true
 
 docker rmi --force spring-base:1.0.0 || true
 docker rmi --force spring-base-event:1.0.0 || true
+docker compose build
 docker compose up --detach
 
 chmod +x ./build/spring-base/create-keycloak-data.sh
