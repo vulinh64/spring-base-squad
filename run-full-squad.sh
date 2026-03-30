@@ -9,7 +9,7 @@ rm -rf ./build/spring-base ./build/spring-base-event
 
 # Clone repositories with shallow depth to save bandwidth
 # TODO: just clone from the main branch when done with the testing
-git clone --depth 1 --branch test-integrate-frontend https://github.com/vulinh64/spring-base.git .\build\spring-base
+git clone --depth 1 --branch test-integrate-frontend https://github.com/vulinh64/spring-base.git ./build/spring-base
 git clone --depth 1 https://github.com/vulinh64/spring-base-event.git ./build/spring-base-event
 
 # Remove .git directories to clean up version control metadata

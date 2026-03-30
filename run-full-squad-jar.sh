@@ -9,7 +9,7 @@ rm -rf ./build/spring-base
 rm -rf ./build/spring-base-event
 
 # TODO: just clone from the main branch when done with the testing
-git clone --depth 1 --branch test-integrate-frontend https://github.com/vulinh64/spring-base.git .\build\spring-base
+git clone --depth 1 --branch test-integrate-frontend https://github.com/vulinh64/spring-base.git ./build/spring-base
 git clone --depth 1 https://github.com/vulinh64/spring-base-event.git ./build/spring-base-event
 
 COMMONS_NAME=spring-base-commons

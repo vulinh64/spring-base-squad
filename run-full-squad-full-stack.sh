@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 # Check if Docker daemon is running
 if ! docker info > /dev/null 2>&1; then
@@ -44,4 +45,5 @@ docker compose -f docker-compose-full-stack.yml up --detach
 
 # Initialize Keycloak data (realm, client, roles, and users)
 
+chmod +x ./build/spring-base/create-keycloak-data.sh
 ./build/spring-base/create-keycloak-data.sh
