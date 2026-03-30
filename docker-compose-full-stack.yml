@@ -68,6 +68,8 @@ services:
     container_name: postgresql
     expose:
       - "5432"
+    ports:
+      - "5432:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=123456
@@ -87,6 +89,8 @@ services:
     container_name: mariadb
     expose:
       - "3306"
+    ports:
+      - "3306:3306"
     environment:
       - MARIADB_ROOT_PASSWORD=123456
       - MARIADB_DATABASE=myspringeventdatabase
@@ -110,6 +114,8 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=rabbitmq
       - RABBITMQ_DEFAULT_PASS=123456
+    volumes:
+      - rabbitmq-volume:/var/lib/rabbitmq
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
       interval: 10s
@@ -130,6 +136,8 @@ services:
     expose:
       - "8080"
       - "9000"
+    volumes:
+      - keycloak-volume:/opt/keycloak/data
     healthcheck:
       test: ['CMD-SHELL', '[ -f /tmp/HealthCheck.java ] || echo "public class HealthCheck { public static void main(String[] args) throws java.lang.Throwable { java.net.URI uri = java.net.URI.create(args[0]); System.exit(java.net.HttpURLConnection.HTTP_OK == ((java.net.HttpURLConnection)uri.toURL().openConnection()).getResponseCode() ? 0 : 1); } }" > /tmp/HealthCheck.java && java /tmp/HealthCheck.java http://localhost:9000/health/live']
       interval: 10s
@@ -140,6 +148,10 @@ volumes:
     name: postgresql-volume
   mariadb-volume:
     name: mariadb-volume
+  keycloak-volume:
+    name: keycloak-volume
+  rabbitmq-volume:
+    name: rabbitmq-volume
 networks:
   spring-base-network:
     driver: bridge
