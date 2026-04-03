@@ -8,8 +8,7 @@ docker info >/dev/null 2>&1 || { echo "Error: Docker daemon is not running."; ec
 rm -rf ./build/spring-base ./build/spring-base-event
 
 # Clone repositories with shallow depth to save bandwidth
-# TODO: just clone from the main branch when done with the testing
-git clone --depth 1 --branch test-integrate-frontend https://github.com/vulinh64/spring-base.git ./build/spring-base
+git clone --depth 1 https://github.com/vulinh64/spring-base.git ./build/spring-base
 git clone --depth 1 https://github.com/vulinh64/spring-base-event.git ./build/spring-base-event
 
 # Remove .git directories to clean up version control metadata
@@ -22,7 +21,7 @@ docker compose down || true
 docker compose -f ./build/spring-base/docker-compose.yml down || true
 docker compose -f ./build/spring-base-event/docker-compose.yml down || true
 
-docker rmi --force spring-base:1.0.0 || true
+docker rmi --force spring-base:2.0.0 || true
 docker rmi --force spring-base-event:1.0.0 || true
 docker compose build
 docker compose up --detach

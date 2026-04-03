@@ -8,8 +8,7 @@ docker info >/dev/null 2>&1 || { echo "Error: Docker daemon is not running."; ec
 rm -rf ./build/spring-base
 rm -rf ./build/spring-base-event
 
-# TODO: just clone from the main branch when done with the testing
-git clone --depth 1 --branch test-integrate-frontend https://github.com/vulinh64/spring-base.git ./build/spring-base
+git clone --depth 1 https://github.com/vulinh64/spring-base.git ./build/spring-base
 git clone --depth 1 https://github.com/vulinh64/spring-base-event.git ./build/spring-base-event
 
 COMMONS_NAME=spring-base-commons
@@ -70,7 +69,7 @@ docker compose down || true
 docker compose -f ./build/spring-base/docker-compose.yml down || true
 docker compose -f ./build/spring-base-event/docker-compose.yml down || true
 
-docker rmi --force spring-base:1.0.0 || true
+docker rmi --force spring-base:2.0.0 || true
 docker rmi --force spring-base-event:1.0.0 || true
 docker compose -f docker-compose-local-jar.yml build
 docker compose -f docker-compose-local-jar.yml up --detach

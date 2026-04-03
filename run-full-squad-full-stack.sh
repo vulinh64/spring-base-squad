@@ -16,8 +16,7 @@ rm -rf ./build/spring-base-frontend
 
 # Clone repositories with shallow depth to save bandwidth
 
-# TODO: just clone from the main branch when done with the testing
-git clone --depth 1 --branch test-integrate-frontend https://github.com/vulinh64/spring-base.git ./build/spring-base
+git clone --depth 1 https://github.com/vulinh64/spring-base.git ./build/spring-base
 git clone --depth 1 https://github.com/vulinh64/spring-base-event.git ./build/spring-base-event
 git clone --depth 1 https://github.com/vulinh64/spring-base-frontend.git ./build/spring-base-frontend
 
@@ -35,7 +34,7 @@ docker compose -f ./build/spring-base/docker-compose.yml down
 docker compose -f ./build/spring-base-event/docker-compose.yml down
 docker compose -f ./docker-compose-full-stack.yml down
 
-docker rmi --force spring-base:1.0.0
+docker rmi --force spring-base:2.0.0
 docker rmi --force spring-base-event:1.0.0
 docker rmi --force spring-base-frontend:1.0.0
 
