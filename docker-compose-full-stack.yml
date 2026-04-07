@@ -51,7 +51,9 @@ services:
       context: ./build/spring-base-frontend
       dockerfile: ./Dockerfile-FE
     expose:
-      - "80"
+      - "3000"
+    environment:
+      - BACKEND_URL=http://spring-base:8088
   gateway:
     networks:
       - spring-base-network
