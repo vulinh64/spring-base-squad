@@ -1,59 +1,80 @@
 services:
+  spring-base-auth:
+    networks:
+      - spring-base-network
+    image: 'spring-base-auth:3.0.0-alpha'
+    container_name: spring-base-auth
+    build:
+      context: ./build/spring-base-auth
+      dockerfile: ./Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - POSTGRES_HOST=postgresql
+      - RABBITMQ_HOST=rabbitmq
+      - ISSUER_SERVER=http://spring-base-auth:8080
+    depends_on:
+      postgresql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
   spring-base:
     networks:
       - spring-base-network
-    image: 'spring-base:2.0.0'
+    image: 'spring-base:3.0.0-alpha'
     container_name: spring-base
     build:
       context: ./build/spring-base
       dockerfile: ./Dockerfile
-    expose:
-      - "8088"
+    ports:
+      - "8088:8088"
     environment:
-      - SPRING_PROFILES_ACTIVE=development
-      - POSTGRESQL_HOST=postgresql
-      - POSTGRESQL_USERNAME=postgres
-      - SERVER_PORT=8088
-      - KEYCLOAK_HOST=http://keycloak:8080
+      - POSTGRES_HOST=postgresql
+      - JWT_ISSUER_URI=http://spring-base-auth:8080
       - RABBITMQ_HOST=rabbitmq
     depends_on:
       postgresql:
         condition: service_healthy
-      keycloak:
-        condition: service_healthy
       rabbitmq:
+        condition: service_healthy
+      spring-base-auth:
         condition: service_healthy
   spring-base-event:
     networks:
       - spring-base-network
-    image: 'spring-base-event:1.0.0'
+    image: 'spring-base-event:3.0.0-alpha'
     container_name: spring-base-event
     build:
       context: ./build/spring-base-event
       dockerfile: ./Dockerfile
-    expose:
-      - "9088"
+    ports:
+      - "9088:9088"
     environment:
-      - SERVER_PORT=9088
-      - MARIADB_HOST=mariadb
+      - POSTGRES_HOST=postgresql
       - RABBITMQ_HOST=rabbitmq
     depends_on:
-      mariadb:
+      postgresql:
         condition: service_healthy
       rabbitmq:
+        condition: service_healthy
+      spring-base-auth:
         condition: service_healthy
   spring-base-frontend:
     networks:
       - spring-base-network
-    image: 'spring-base-frontend:1.0.0'
+    image: 'spring-base-frontend:3.0.0-alpha'
     container_name: spring-base-frontend
     build:
       context: ./build/spring-base-frontend
-      dockerfile: ./Dockerfile-FE
+      dockerfile: ./Dockerfile
     expose:
       - "3000"
     environment:
       - BACKEND_URL=http://spring-base:8088
+      - AUTH_URL=http://spring-base-auth:8080
+    depends_on:
+      spring-base-auth:
+        condition: service_healthy
   gateway:
     networks:
       - spring-base-network
@@ -63,19 +84,24 @@ services:
       - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      spring-base-auth:
+        condition: service_healthy
+      spring-base:
+        condition: service_started
+      spring-base-frontend:
+        condition: service_started
   postgresql:
     networks:
       - spring-base-network
     image: 'postgres:18.3-alpine3.23'
     container_name: postgresql
-    expose:
-      - "5432"
     ports:
       - "5432:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=123456
-      - POSTGRES_DB=myspringdatabase
+      - POSTGRES_DB=spring-base-auth
     volumes:
       - postgresql-volume:/var/lib/postgresql
     healthcheck:
@@ -84,35 +110,14 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
-  mariadb:
-    networks:
-      - spring-base-network
-    image: mariadb:12.2.2-noble
-    container_name: mariadb
-    expose:
-      - "3306"
-    ports:
-      - "3306:3306"
-    environment:
-      - MARIADB_ROOT_PASSWORD=123456
-      - MARIADB_DATABASE=myspringeventdatabase
-    volumes:
-      - mariadb-volume:/var/lib/mysql
-    healthcheck:
-      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
-      interval: 10s
-      timeout: 10s
-      retries: 5
-    command:
-      - --lower_case_table_names=1
   rabbitmq:
     networks:
       - spring-base-network
     image: 'rabbitmq:4.2.4-alpine'
     container_name: rabbitmq
-    expose:
-      - "5672"
-      - "15672"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
     environment:
       - RABBITMQ_DEFAULT_USER=rabbitmq
       - RABBITMQ_DEFAULT_PASS=123456
@@ -123,35 +128,9 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
-  keycloak:
-    networks:
-      - spring-base-network
-    image: quay.io/keycloak/keycloak:26.5.5
-    container_name: keycloak
-    command: start-dev
-    environment:
-      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
-      - KC_BOOTSTRAP_ADMIN_PASSWORD=123456
-      - KC_HEALTH_ENABLED=true
-      - KC_METRICS_ENABLED=true
-      - KC_HOSTNAME=keycloak
-    expose:
-      - "8080"
-      - "9000"
-    volumes:
-      - keycloak-volume:/opt/keycloak/data
-    healthcheck:
-      test: ['CMD-SHELL', '[ -f /tmp/HealthCheck.java ] || echo "public class HealthCheck { public static void main(String[] args) throws java.lang.Throwable { java.net.URI uri = java.net.URI.create(args[0]); System.exit(java.net.HttpURLConnection.HTTP_OK == ((java.net.HttpURLConnection)uri.toURL().openConnection()).getResponseCode() ? 0 : 1); } }" > /tmp/HealthCheck.java && java /tmp/HealthCheck.java http://localhost:9000/health/live']
-      interval: 10s
-      timeout: 10s
-      retries: 15
 volumes:
   postgresql-volume:
     name: postgresql-volume
-  mariadb-volume:
-    name: mariadb-volume
-  keycloak-volume:
-    name: keycloak-volume
   rabbitmq-volume:
     name: rabbitmq-volume
 networks:
