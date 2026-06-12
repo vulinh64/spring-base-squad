@@ -67,6 +67,9 @@ services:
     build:
       context: ./build/spring-base-frontend
       dockerfile: ./Dockerfile
+      args:
+        BACKEND_URL: http://spring-base:8088
+        AUTH_URL: http://spring-base-auth:8080
     expose:
       - "3000"
     environment:
