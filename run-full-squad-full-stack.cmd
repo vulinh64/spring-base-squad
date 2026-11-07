@@ -35,10 +35,10 @@ rmdir /s /q .\build\spring-base-frontend\.git
 docker compose down
 docker compose -f docker-compose-full-stack.yml down
 
-docker rmi --force spring-base:3.0.0-alpha
-docker rmi --force spring-base-event:3.0.0-alpha
-docker rmi --force spring-base-auth:3.0.0-alpha
-docker rmi --force spring-base-frontend:3.0.0-alpha
+docker rmi --force spring-base:3.0.0
+docker rmi --force spring-base-event:3.0.0
+docker rmi --force spring-base-auth:3.0.0
+docker rmi --force spring-base-frontend:3.0.0
 
 docker compose -f docker-compose-full-stack.yml build
 docker compose -f docker-compose-full-stack.yml up --detach

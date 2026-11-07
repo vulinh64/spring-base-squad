@@ -34,10 +34,10 @@ rm -rf ./build/spring-base-frontend/.git
 docker compose down || true
 docker compose -f docker-compose-full-stack.yml down || true
 
-docker rmi --force spring-base:3.0.0-alpha || true
-docker rmi --force spring-base-event:3.0.0-alpha || true
-docker rmi --force spring-base-auth:3.0.0-alpha || true
-docker rmi --force spring-base-frontend:3.0.0-alpha || true
+docker rmi --force spring-base:3.0.0 || true
+docker rmi --force spring-base-event:3.0.0 || true
+docker rmi --force spring-base-auth:3.0.0 || true
+docker rmi --force spring-base-frontend:3.0.0 || true
 
 docker compose -f docker-compose-full-stack.yml build
 docker compose -f docker-compose-full-stack.yml up --detach
