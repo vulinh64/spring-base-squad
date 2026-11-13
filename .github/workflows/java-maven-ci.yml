@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: vulinh64/spring-base-squad
-          ref: main
+          ref: '1.1.0'
           path: .github/spring-base-squad
           sparse-checkout: ParentPomDetector.java
           sparse-checkout-cone-mode: false
