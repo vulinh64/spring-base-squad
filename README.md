@@ -20,6 +20,15 @@ This repository is not meant to be a Java project. Rather, it contains scripts (
 
 ## Usage
 
+To build and start the backend services from local sibling repositories, run
+`run-full-squad-local.cmd` on Windows or `bash ./run-full-squad-local.sh` on Linux/macOS.
+Place `spring-base`, `spring-base-auth`, and `spring-base-event` alongside
+`spring-base-squad`. These scripts use the local working trees, including uncommitted
+changes, and do not clone or delete repositories. Docker must be running.
+Pass `--no-cache --pull` to force a fresh image build. The frontend is not included.
+To stop this local stack, run
+`docker compose -f docker-compose.yml -f docker-compose-local.yml down` from the squad directory.
+
 * For Windows, run [this script](./run-full-squad.cmd) or [this script](./run-full-squad-jar.cmd) that use host OS to build jar files, or [this script](./run-full-squad-full-stack.cmd) that also includes the frontend.
 
 * For Linux or MacOS, run [this script](./run-full-squad.sh) or [this script](./run-full-squad-jar.sh) that use host OS to build jar files, or [this script](./run-full-squad-full-stack.sh) that also includes the frontend.

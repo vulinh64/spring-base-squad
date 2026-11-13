@@ -1,0 +1,10 @@
+services:
+  spring-base-auth:
+    build:
+      context: ../spring-base-auth
+  spring-base:
+    build:
+      context: ../spring-base
+  spring-base-event:
+    build:
+      context: ../spring-base-event
