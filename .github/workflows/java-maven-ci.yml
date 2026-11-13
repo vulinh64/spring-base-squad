@@ -19,11 +19,20 @@ jobs:
           cache: maven
       - name: Make Maven wrapper executable
         run: chmod +x mvnw
+      - name: Check out parent POM detector
+        uses: actions/checkout@v4
+        with:
+          repository: vulinh64/spring-base-squad
+          ref: main
+          path: .github/spring-base-squad
+          sparse-checkout: ParentPomDetector.java
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
       - name: Read spring-base-parent version
         id: parent-version
         run: |
           echo "Reading spring-base-parent version from pom.xml..."
-          SPRING_BASE_PARENT_VERSION="$(sed -n '/<parent>/,/<\/parent>/s:.*<version>\([^<]*\)</version>.*:\1:p' pom.xml | sed -n '1p')"
+          SPRING_BASE_PARENT_VERSION="$(java .github/spring-base-squad/ParentPomDetector.java)"
           if [ -z "$SPRING_BASE_PARENT_VERSION" ]; then
             echo "Failed to evaluate parent version from pom.xml"
             exit 1
